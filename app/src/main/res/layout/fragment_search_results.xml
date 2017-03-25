@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/fragment_top_margin">
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/tweet_list"
+        android:name="com.actest.nick.hashtagsearch2.SearchResultsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.actest.nick.hashtagsearch2.SearchResultsFragment"
+        />
+</android.support.v4.widget.SwipeRefreshLayout>
+
