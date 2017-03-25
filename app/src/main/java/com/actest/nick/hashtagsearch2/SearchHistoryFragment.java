@@ -1,6 +1,8 @@
 package com.actest.nick.hashtagsearch2;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actest.nick.hashtagsearch2.data.SearchHistoryLoader;
 
@@ -20,7 +24,7 @@ import java.util.ArrayList;
 /**
  * A fragment representing a list of previous search queries
  */
-public class SearchHistoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<String>> {
+public class SearchHistoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<String>>, AdapterView.OnItemClickListener {
 
     private static final String TAG = "SearchHistoryFragment";
 
@@ -64,6 +68,14 @@ public class SearchHistoryFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<ArrayList<String>> loader) {
         Log.d(TAG, "onLoaderReset: RESET?");
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String query = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
+        Intent intent = new Intent(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, query);
+        startActivity(intent);
     }
 
 

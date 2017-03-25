@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import com.actest.nick.hashtagsearch2.data.SearchHistorySaver;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 
 import java.util.ArrayList;
 
@@ -29,9 +30,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private static final String SEARCH_HISTORY_FILENAME = "SearchHistory";
     private final String SEARCH_FRAGMENT_NAME = "SearchFragment";
 
-    // todo: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "V6eNOeMpu5mO1srwlPFNX1GDT";
-    private static final String TWITTER_SECRET = "uah6slziKgGHZWMiSEUNrRxlu72n1qnS4qartJbT2Vnto2WUGz";
 
     private Toolbar toolbar;
     private ArrayList<String> mSearchHistory = new ArrayList<>();
@@ -39,8 +37,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
+
         setContentView(R.layout.activity_search);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

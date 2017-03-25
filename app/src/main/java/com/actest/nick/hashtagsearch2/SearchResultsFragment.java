@@ -1,5 +1,6 @@
 package com.actest.nick.hashtagsearch2;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
  */
 public class SearchResultsFragment extends Fragment {
 
+    private static final String TAG = "SearchResultsFragment";
     private SwipeRefreshLayout swipeRefreshLayout;
     private TweetTimelineListAdapter adapter;
     private ListView listView;
@@ -78,7 +80,8 @@ public class SearchResultsFragment extends Fragment {
      * Refresh search results using the SwipeRefreshLayout progress indicator
      */
     private void refreshSearchResults() {
-        if (adapter == null) {
+        if (adapter == null || !SearchApplication.isConnectedToInternet()) {
+            swipeRefreshLayout.setRefreshing(false);
             return;
         }
         swipeRefreshLayout.setRefreshing(true);
