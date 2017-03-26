@@ -12,7 +12,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by NICK on 3/25/2017.
+ * Rewrite headers to cache twitter results
  */
 
 public class CachingControlInterceptor implements Interceptor {
@@ -20,7 +20,7 @@ public class CachingControlInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
         Request.Builder request = originalRequest.newBuilder();
-        if (originalRequest.header("fresh") != null) {
+        if (SearchApplication.isConnectedToInternet()) {
             request.cacheControl(CacheControl.FORCE_NETWORK);
         }
         Response response = chain.proceed(request.build());

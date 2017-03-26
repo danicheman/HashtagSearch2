@@ -16,13 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.actest.nick.hashtagsearch2.data.SearchHistorySaver;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
 
 import java.util.ArrayList;
-
-import io.fabric.sdk.android.Fabric;
 
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean>, SearchHistoryFragment.SearchHistoryAccessibleInterface {
 
@@ -32,6 +27,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
 
     private Toolbar toolbar;
+    private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
     private ArrayList<String> mSearchHistory = new ArrayList<>();
 
     @Override
@@ -58,6 +55,13 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Log.d(TAG, "handleIntent: query:" + query);
+
+            //set the search in the searchbox if it's not open
+            if (!mSearchMenuItem.isActionViewExpanded()) {
+                mSearchMenuItem.expandActionView();
+                mSearchView.setQuery(query,false);
+            }
+
 
             SearchResultsFragment searchResultsFragment;
 
@@ -106,11 +110,12 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchMenuItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
         // Assumes current activity is the searchable activity todo: searchableinfo
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        mSearchView.setIconified(false); // Do not iconify the widget; expand it by default
 
         return true;
     }

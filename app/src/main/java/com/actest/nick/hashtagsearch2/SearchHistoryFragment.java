@@ -45,7 +45,7 @@ public class SearchHistoryFragment extends Fragment implements LoaderManager.Loa
         View view = inflater.inflate(R.layout.fragment_search_history, container, false);
 
         mSearchHistoryListView = (ListView) view.findViewById(R.id.list_search_history);
-
+        mSearchHistoryListView.setOnItemClickListener(this);
         //start loading search history
         getLoaderManager().initLoader(0, null, this).forceLoad();
 
@@ -73,13 +73,13 @@ public class SearchHistoryFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String query = ((TextView)view.findViewById(android.R.id.text1)).getText().toString();
-        Intent intent = new Intent(Intent.ACTION_SEARCH);
+        Intent intent = new Intent(getContext(), SearchActivity.class);
+        intent.setAction(Intent.ACTION_SEARCH);
         intent.putExtra(SearchManager.QUERY, query);
         startActivity(intent);
     }
 
-
-    public interface SearchHistoryAccessibleInterface {
+    interface SearchHistoryAccessibleInterface {
 
         void setSearchHistory(ArrayList<String> searchHistory);
 

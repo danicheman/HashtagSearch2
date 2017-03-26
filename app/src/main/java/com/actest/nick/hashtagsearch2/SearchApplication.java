@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.actest.nick.hashtagsearch2.data.CachingControlInterceptor;
+import com.actest.nick.hashtagsearch2.data.OfflineCacheInterceptor;
+import com.actest.nick.hashtagsearch2.data.RewriteCacheInterceptor;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -23,6 +25,8 @@ public class SearchApplication extends Application {
     private static final String TWITTER_KEY = "V6eNOeMpu5mO1srwlPFNX1GDT";
     private static final String TWITTER_SECRET = "uah6slziKgGHZWMiSEUNrRxlu72n1qnS4qartJbT2Vnto2WUGz";
 
+    private final long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
+
     private static SearchApplication instance;
 
     @Override
@@ -34,11 +38,12 @@ public class SearchApplication extends Application {
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
 
-        long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
+
         Cache cache = new Cache(new File(getCacheDir(), "http"), SIZE_OF_CACHE);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .cache(cache)
+                //.addInterceptor( new OfflineCacheInterceptor())
                 .addNetworkInterceptor(new CachingControlInterceptor())
                 .build();
 
