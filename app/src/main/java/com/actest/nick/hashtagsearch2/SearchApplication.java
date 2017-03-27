@@ -5,13 +5,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.actest.nick.hashtagsearch2.data.CachingControlInterceptor;
-import com.actest.nick.hashtagsearch2.data.OfflineCacheInterceptor;
-import com.actest.nick.hashtagsearch2.data.RewriteCacheInterceptor;
+import com.actest.nick.hashtagsearch2.data.UseCacheWhenOfflineInterceptor;
+import com.actest.nick.hashtagsearch2.data.AlwaysSaveToCacheInterceptor;
 import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterApiClient;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.*;
+
 
 import java.io.File;
 
@@ -20,6 +18,7 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
 public class SearchApplication extends Application {
+
 
     // todo: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "V6eNOeMpu5mO1srwlPFNX1GDT";
@@ -35,7 +34,7 @@ public class SearchApplication extends Application {
 
         instance = this;
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(BuildConfig.CONSUMER_KEY, BuildConfig.CONSUMER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
 
 
@@ -43,8 +42,8 @@ public class SearchApplication extends Application {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .cache(cache)
-                //.addInterceptor( new OfflineCacheInterceptor())
-                .addNetworkInterceptor(new CachingControlInterceptor())
+                .addInterceptor( new UseCacheWhenOfflineInterceptor())
+                .addNetworkInterceptor(new AlwaysSaveToCacheInterceptor())
                 .build();
 
         TwitterCore.getInstance().addGuestApiClient(new TwitterApiClient(client));

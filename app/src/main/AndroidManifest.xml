@@ -3,7 +3,6 @@
     package="com.actest.nick.hashtagsearch2">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
@@ -14,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:name=".SearchApplication"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity android:name=".SearchActivity"
             android:launchMode="singleTop">
             <intent-filter>
@@ -32,7 +31,7 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:label="@string/activity_settings"
             android:parentActivityName=".SearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

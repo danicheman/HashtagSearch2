@@ -10,11 +10,12 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 /**
- * Created by NICK on 3/25/2017.
+ * Load from search history file
  */
 public class SearchHistoryLoader extends AsyncTaskLoader<ArrayList<String>> {
-    private String filename;
+    private final String filename;
     private static final String TAG = "SearchHistoryLoader";
+
     public SearchHistoryLoader(Context context, String filename) {
         super(context);
         this.filename = filename;
@@ -22,7 +23,6 @@ public class SearchHistoryLoader extends AsyncTaskLoader<ArrayList<String>> {
 
     @Override
     public ArrayList<String> loadInBackground() {
-        Log.d(TAG, "loadInBackground: STARTING");
         FileInputStream fis;
 
         try {
@@ -31,26 +31,23 @@ public class SearchHistoryLoader extends AsyncTaskLoader<ArrayList<String>> {
             ObjectInputStream ois = new ObjectInputStream(fis);
             ArrayList<String> returnlist = (ArrayList<String>) ois.readObject();
 
-            //todo: testing
             if (returnlist == null || returnlist.size() == 0) {
-                Log.d(TAG, "loadInBackground: default list");
-
-                returnlist.add("#androido");
-                returnlist.add("#perfMatters");
+                throw new FileNotFoundException();
             }
             ois.close();
             return returnlist;
         } catch (FileNotFoundException e) {
-            //todo: be better with errors
-            //return new ArrayList<String>();
-        } catch (Exception e) {
-            //Log.e(TAG, "loadInBackground: ", e);
+            Log.i(TAG, "loadInBackground: No previous searches found, loading default list");
+            ArrayList<String> defaultSearchList = new ArrayList<>();
+            defaultSearchList.add("#androido");
+            defaultSearchList.add("#perfMatters");
+            return defaultSearchList;
 
+        } catch (Exception e) {
+            Log.e(TAG, "loadInBackground: ", e);
+            return null;
         }
-        ArrayList<String> errorList = new ArrayList<>();
-        errorList.add("#androido");
-        errorList.add("#perfMatters");
-        return errorList;
+
     }
 }
 

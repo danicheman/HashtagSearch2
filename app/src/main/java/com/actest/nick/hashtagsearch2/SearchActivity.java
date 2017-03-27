@@ -54,7 +54,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d(TAG, "handleIntent: query:" + query);
 
             //set the search in the searchbox if it's not open
             if (!mSearchMenuItem.isActionViewExpanded()) {
@@ -62,7 +61,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 mSearchView.setQuery(query,false);
             }
 
-
+            mSearchView.clearFocus();
             SearchResultsFragment searchResultsFragment;
 
             //check the current fragment type
@@ -83,13 +82,11 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 bundle.putString("query", query);
                 searchResultsFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, searchResultsFragment)
+                        .replace(R.id.container, searchResultsFragment, SearchResultsFragment.TAG)
                         .addToBackStack(SEARCH_FRAGMENT_NAME)
                         .commitAllowingStateLoss();
             }
             Log.d(TAG, "onSearchRequested: " + query);
-
-
         }
     }
 
@@ -113,7 +110,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         mSearchMenuItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        // Assumes current activity is the searchable activity todo: searchableinfo
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setIconified(false); // Do not iconify the widget; expand it by default
 
@@ -127,10 +123,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
-        if (data) {
-            Log.d(TAG, "onLoadFinished: Successfully Saved");
-        } else {
-            Log.e(TAG, "onLoadFinished: Error");
+        if (!data) {
+            Log.e(TAG, "onLoadFinished: SearchHistorySaver did not save history successfully");
         }
     }
 

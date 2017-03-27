@@ -1,8 +1,9 @@
 package com.actest.nick.hashtagsearch2;
 
-import android.app.Application;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,13 +27,13 @@ import com.twitter.sdk.android.tweetui.TweetTimelineListAdapter;
  */
 public class SearchResultsFragment extends Fragment {
 
-    private static final String TAG = "SearchResultsFragment";
+    public static final String TAG = "SearchResultsFragment";
     private SwipeRefreshLayout swipeRefreshLayout;
     private TweetTimelineListAdapter adapter;
     private ListView listView;
 
     private Handler searchRefreshHandler = new Handler();
-    private int delay = 10000; //10 seconds
+    private int refreshInterval = 10000; //10 seconds
 
     private Runnable runnable;
 
@@ -45,13 +46,24 @@ public class SearchResultsFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        //todo: get and set delay from preferences
+        //todo: get and set refreshInterval from preferences
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
         String query = bundle.getString("query");
+
+        updateRefreshIntervalFromSharedPreferences();
+        Log.d(TAG, "onCreate: Refresh interval is"+ refreshInterval);
         if(query != null) {
             search(query);
+        }
+    }
+
+    private void updateRefreshIntervalFromSharedPreferences() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int preferredRefreshInterval = Integer.valueOf(preferences.getString(getContext().getResources().getString(R.string.pref_key_refresh_interval), "-1"));
+        if (preferredRefreshInterval > 5) {
+            refreshInterval = preferredRefreshInterval * 1000;
         }
     }
 
@@ -60,7 +72,6 @@ public class SearchResultsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_results, container, false);
 
-        //todo: caching http://stackoverflow.com/questions/23429046/can-retrofit-with-okhttp-use-cache-data-when-offline
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         listView = (ListView) view.findViewById(R.id.tweet_list);
 
@@ -114,16 +125,16 @@ public class SearchResultsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        //set search to refresh automatically every "delay" seconds
+        //set search to refresh automatically every "refreshInterval" seconds
         searchRefreshHandler.postDelayed(new Runnable() {
             public void run() {
                 //do something
 
                 refreshSearchResults();
                 runnable = this;
-                searchRefreshHandler.postDelayed(runnable, delay);
+                searchRefreshHandler.postDelayed(runnable, refreshInterval);
             }
-        }, delay);
+        }, refreshInterval);
 
         super.onResume();
     }

@@ -28,7 +28,7 @@ public class SearchHistoryFragment extends Fragment implements LoaderManager.Loa
 
     private static final String TAG = "SearchHistoryFragment";
 
-    SearchHistoryAccessibleInterface searchHistoryAccessor;
+    private SearchHistoryAccessibleInterface searchHistoryAccessor;
 
     private ListView mSearchHistoryListView;
 
@@ -79,7 +79,7 @@ public class SearchHistoryFragment extends Fragment implements LoaderManager.Loa
         startActivity(intent);
     }
 
-    interface SearchHistoryAccessibleInterface {
+     interface SearchHistoryAccessibleInterface {
 
         void setSearchHistory(ArrayList<String> searchHistory);
 

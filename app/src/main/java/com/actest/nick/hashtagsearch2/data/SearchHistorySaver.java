@@ -9,13 +9,13 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
- * Created by NICK on 3/25/2017.
+ * Save to search history file
  */
 public class SearchHistorySaver extends AsyncTaskLoader<Boolean> {
 
     private static final String TAG = "SearchHistorySaver";
-    private ArrayList<String> mSearchHistory;
-    private String mFilename;
+    private final ArrayList<String> mSearchHistory;
+    private final String mFilename;
 
     public SearchHistorySaver(Context context, ArrayList<String> searchHistory, String filename) {
         super(context);
@@ -25,17 +25,16 @@ public class SearchHistorySaver extends AsyncTaskLoader<Boolean> {
 
     @Override
     public Boolean loadInBackground() {
+        //if there was nothing to do, return true
+        if (mSearchHistory.size() == 0) return true;
         try {
-            if(mSearchHistory.size()>0) {
-                FileOutputStream fos = getContext().openFileOutput(mFilename, Context.MODE_PRIVATE);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(mSearchHistory);
-                oos.close();
-            }
-
+            FileOutputStream fos = getContext().openFileOutput(mFilename, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(mSearchHistory);
+            oos.close();
             return true;
         } catch (Exception e) {
-            Log.e(TAG, "loadInBackground: ",e);
+            Log.e(TAG, "loadInBackground: ", e);
         }
         return false;
     }
