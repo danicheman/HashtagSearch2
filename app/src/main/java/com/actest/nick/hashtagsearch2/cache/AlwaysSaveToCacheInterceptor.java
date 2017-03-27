@@ -1,4 +1,4 @@
-package com.actest.nick.hashtagsearch2.data;
+package com.actest.nick.hashtagsearch2.cache;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public class AlwaysSaveToCacheInterceptor implements Interceptor {
         return response.newBuilder()
                 .removeHeader("Pragma")
                 .removeHeader(CACHE_CONTROL)
-                .header(CACHE_CONTROL, "public, max-age=" + 60 * 2) // 2 minutes
+                .header(CACHE_CONTROL, "public, max-age=" + 5) // 5 Seconds
                 .build();
     }
 }

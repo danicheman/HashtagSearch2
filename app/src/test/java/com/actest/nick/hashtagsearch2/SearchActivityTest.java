@@ -7,7 +7,6 @@ import android.support.v4.content.Loader;
 import android.view.View;
 
 import com.actest.nick.hashtagsearch2.data.SearchHistorySaver;
-import com.twitter.sdk.android.core.models.Search;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
@@ -22,7 +21,9 @@ import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * Created by NICK on 3/26/2017.
+ * Robolectric Unit Tests for SearchActivity
+ *
+ * Uses Lollipop API version 22 to avoid missing OpenGL library error
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 22)
@@ -36,7 +37,7 @@ public class SearchActivityTest {
     }
 
     @Test
-    public void litmus() {
+    public void testActivityAndIconExist() {
         Drawable icon = searchActivity.getResources().getDrawable(R.mipmap.ic_launcher);
         assertNotNull("The application icon doesn't exist",icon);
     }

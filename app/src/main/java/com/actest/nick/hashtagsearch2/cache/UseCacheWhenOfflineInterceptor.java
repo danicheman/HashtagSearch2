@@ -1,4 +1,4 @@
-package com.actest.nick.hashtagsearch2.data;
+package com.actest.nick.hashtagsearch2.cache;
 
 import com.actest.nick.hashtagsearch2.SearchApplication;
 

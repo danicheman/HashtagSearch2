@@ -6,27 +6,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.actest.nick.hashtagsearch2.data.SearchHistorySaver;
 
 import java.util.ArrayList;
 
-public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean>, SearchHistoryFragment.SearchHistoryAccessibleInterface {
+public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean>, SearchHistoryFragment.SearchHistoryAccessibleInterface, SearchView.OnFocusChangeListener,SearchView.OnCloseListener {
 
     private static final String TAG = "SearchActivity";
     private static final String SEARCH_HISTORY_FILENAME = "SearchHistory";
-    private final String SEARCH_FRAGMENT_NAME = "SearchFragment";
 
-
-    private Toolbar toolbar;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
     private ArrayList<String> mSearchHistory = new ArrayList<>();
@@ -37,7 +35,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         setContentView(R.layout.activity_search);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction()
@@ -61,7 +59,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 mSearchView.setQuery(query,false);
             }
 
-            mSearchView.clearFocus();
+
             SearchResultsFragment searchResultsFragment;
 
             //check the current fragment type
@@ -81,12 +79,16 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                 Bundle bundle = new Bundle();
                 bundle.putString("query", query);
                 searchResultsFragment.setArguments(bundle);
+                String SEARCH_FRAGMENT_NAME = "SearchFragment";
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, searchResultsFragment, SearchResultsFragment.TAG)
                         .addToBackStack(SEARCH_FRAGMENT_NAME)
                         .commitAllowingStateLoss();
             }
             Log.d(TAG, "onSearchRequested: " + query);
+//            mSearchView.setOnFocusChangeListener(this);
+//            mSearchView.setOnCloseListener(this);
+            mSearchView.clearFocus();
         }
     }
 
@@ -142,5 +144,16 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     @Override
     public String getSearchHistoryFilename() {
         return SEARCH_HISTORY_FILENAME;
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        Log.e(TAG, "FOCUS: asdfasdfsad!!");
+    }
+
+    @Override
+    public boolean onClose() {
+        Log.e(TAG, "CLOSE: asdfasdfsad!!");
+        return false;
     }
 }

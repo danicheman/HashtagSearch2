@@ -5,8 +5,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.actest.nick.hashtagsearch2.data.UseCacheWhenOfflineInterceptor;
-import com.actest.nick.hashtagsearch2.data.AlwaysSaveToCacheInterceptor;
+import com.actest.nick.hashtagsearch2.cache.UseCacheWhenOfflineInterceptor;
+import com.actest.nick.hashtagsearch2.cache.AlwaysSaveToCacheInterceptor;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.*;
 
@@ -18,8 +18,6 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
 public class SearchApplication extends Application {
-
-    private final long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
 
     private static SearchApplication instance;
 
@@ -33,7 +31,8 @@ public class SearchApplication extends Application {
         Fabric.with(this, new Twitter(authConfig));
 
 
-        Cache cache = new Cache(new File(getCacheDir(), "http"), SIZE_OF_CACHE);
+        long sizeOfCache = 10 * 1024 * 1024;
+        Cache cache = new Cache(new File(getCacheDir(), "http"), sizeOfCache);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .cache(cache)

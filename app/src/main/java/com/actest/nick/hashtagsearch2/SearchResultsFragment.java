@@ -1,6 +1,7 @@
 package com.actest.nick.hashtagsearch2;
 
 import android.content.SharedPreferences;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -30,7 +31,6 @@ public class SearchResultsFragment extends Fragment {
     public static final String TAG = "SearchResultsFragment";
     private SwipeRefreshLayout swipeRefreshLayout;
     private TweetTimelineListAdapter adapter;
-    private ListView listView;
 
     private Handler searchRefreshHandler = new Handler();
     private int refreshInterval = 10000; //10 seconds
@@ -46,14 +46,12 @@ public class SearchResultsFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        //todo: get and set refreshInterval from preferences
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
         String query = bundle.getString("query");
 
         updateRefreshIntervalFromSharedPreferences();
-        Log.d(TAG, "onCreate: Refresh interval is"+ refreshInterval);
         if(query != null) {
             search(query);
         }
@@ -73,7 +71,7 @@ public class SearchResultsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search_results, container, false);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
-        listView = (ListView) view.findViewById(R.id.tweet_list);
+        ListView listView = (ListView) view.findViewById(R.id.tweet_list);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -110,7 +108,7 @@ public class SearchResultsFragment extends Fragment {
     }
 
     public void search(String query) {
-        if(query == "") return;
+        if(query.equals("")) return;
 
         SearchTimeline searchTimeline = new SearchTimeline.Builder()
                 .query(query)
