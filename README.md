@@ -1,9 +1,9 @@
 # HashtagSearch - Version 2
-Test for Applicaster, an automatically refreshing twitter search with persisted search history and search results. It works offline!
+This is a test project for Applicaster, an automatically refreshing Twitter search with cached history and results.
 
 ## Synopsis
 
-After experimenting with using the Twitter Web API directly in HashtagSearch Version 1, I decided to use Fabric.io's excellent Twitter Kit.  After much research, I also discovered how to run Fabric with a custom OkHttp Client, and how to enable caching on it.  I  followed the Android developer guide for creating a searchable app.
+After investigating Twitter4j, and interacting with Twitter's Web API directly in HashtagSearch Version 1, I ultimately decided to use [Fabric's](https://fabric.io) excellent Twitter Kit.  Twitter's [Fabric sample app](https://github.com/twitter/twitter-kit-android/tree/master/samples), demonstrated the simplest way to run Fabric with a custom OkHttp Client.  By combining several interceptor examples I was able to create an effective caching component for my custom OkHttp client. In designing the search interface, I followed the Android developer guide for a searchable app.
 
 ## Getting Started
 
@@ -41,13 +41,7 @@ This project uses Espresso for instrument tests and Robolectric for unit tests. 
 
 To setup Robolectric, you'll need to create an *Android JUnit* configuration in Android Studio.  The key configuration is to set `Working directory` to `$MODULE_DIR$`
 
-### Break down into end to end tests
 
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Acknowledgments
 
