@@ -19,11 +19,6 @@ import okhttp3.OkHttpClient;
 
 public class SearchApplication extends Application {
 
-
-    // todo: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "V6eNOeMpu5mO1srwlPFNX1GDT";
-    private static final String TWITTER_SECRET = "uah6slziKgGHZWMiSEUNrRxlu72n1qnS4qartJbT2Vnto2WUGz";
-
     private final long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MiB
 
     private static SearchApplication instance;
