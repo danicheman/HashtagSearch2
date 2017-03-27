@@ -11,7 +11,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Api Key Requirements
 
-You'll need to have an account on [Fabric.io](https://fabric.io) and an [API key for twitter](https://dev.twitter.com/).  Twitter integration was done with the assistance of the (Fabric plugin for Android Studio)[https://fabric.io/downloads/android]
+You'll need to have an account on [Fabric.io](https://fabric.io) and an [API key for twitter](https://dev.twitter.com/).  Twitter integration was done with the assistance of the [Fabric plugin for Android Studio](https://fabric.io/downloads/android)
 
 ```
 Give examples
@@ -19,9 +19,9 @@ Give examples
 
 ### Building the project
 
-In order to build the app, you'll need to _create_ and populate the `app/fabric.properties` file.  The Fabric for Android plugin will help with this, and you can also refer to the Fabric for Android sample app.
+In order to build the app, you'll need to _create_ and populate the `app/fabric.properties` file.  The Fabric for Android plugin will help with this, and you can also refer to the [Fabric for Android sample app](https://github.com/twitter/twitter-kit-android/tree/master/samples).
 
-Sample fabric.properties file:
+Sample [fabric.properties](https://raw.githubusercontent.com/twitter/twitter-kit-android/master/samples/app/fabric.properties.sample) file:
 
 ```
 #These keys are provisioned on the plugin. Copy the keys on the plugin here.
