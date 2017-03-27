@@ -20,6 +20,8 @@ import com.actest.nick.hashtagsearch2.data.SearchHistorySaver;
 
 import java.util.ArrayList;
 
+import io.fabric.sdk.android.services.common.CommonUtils;
+
 public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean>, SearchHistoryFragment.SearchHistoryAccessibleInterface, SearchView.OnFocusChangeListener,SearchView.OnCloseListener {
 
     private static final String TAG = "SearchActivity";
@@ -28,6 +30,8 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
     private ArrayList<String> mSearchHistory = new ArrayList<>();
+    private Toolbar toolbar;
+    private Boolean showSearch = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
         setContentView(R.layout.activity_search);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction()
@@ -53,13 +57,12 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            //set the search in the searchbox if it's not open
-            if (!mSearchMenuItem.isActionViewExpanded()) {
-                mSearchMenuItem.expandActionView();
-                mSearchView.setQuery(query,false);
-            }
+            Log.d(TAG, "handleIntent: collapseactionview");;
+            mSearchMenuItem.collapseActionView();
+            toolbar.setTitle(query);
 
-
+            showSearch = false;
+            invalidateOptionsMenu();
             SearchResultsFragment searchResultsFragment;
 
             //check the current fragment type
@@ -86,10 +89,15 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
                         .commitAllowingStateLoss();
             }
             Log.d(TAG, "onSearchRequested: " + query);
-//            mSearchView.setOnFocusChangeListener(this);
-//            mSearchView.setOnCloseListener(this);
-            mSearchView.clearFocus();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        toolbar.setTitle(getResources().getString(R.string.app_name));
+        showSearch = true;
+        invalidateOptionsMenu();
+        super.onBackPressed();
     }
 
     @Override
@@ -112,8 +120,15 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         mSearchMenuItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        mSearchView.setIconified(false); // Do not iconify the widget; expand it by default
+        mSearchMenuItem.setVisible(showSearch);
+
+        if (showSearch) {
+            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            mSearchView.setIconified(false); // Do not iconify the widget; expand it by default
+        } else {
+
+            CommonUtils.hideKeyboard(this, this.findViewById(android.R.id.content));
+        }
 
         return true;
     }
