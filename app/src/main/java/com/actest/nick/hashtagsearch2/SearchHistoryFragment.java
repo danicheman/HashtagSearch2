@@ -4,9 +4,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +15,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actest.nick.hashtagsearch2.data.SearchHistoryLoader;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A fragment representing a list of previous search queries
  */
-public class SearchHistoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<String>>, AdapterView.OnItemClickListener {
+public class SearchHistoryFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     private SearchHistoryAccessibleInterface searchHistoryAccessor;
 
     private ListView mSearchHistoryListView;
+
+    private static final String TAG = "SearchHistoryFragment";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,24 +47,36 @@ public class SearchHistoryFragment extends Fragment implements LoaderManager.Loa
         mSearchHistoryListView = (ListView) view.findViewById(R.id.list_search_history);
         mSearchHistoryListView.setOnItemClickListener(this);
         //start loading search history
-        getLoaderManager().initLoader(0, null, this).forceLoad();
+
+        String jsonSearchHistory = getContext().getSharedPreferences(SearchActivity.SEARCH_HISTORY_PREFS, MODE_PRIVATE)
+                .getString(SearchActivity.SEARCH_HISTORY_KEY, "");
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> searchHistory = new Gson()
+                    .fromJson(jsonSearchHistory, ArrayList.class);
+
+        if (searchHistory == null) {
+            searchHistory = populateSearchHistory();
+        }
+
+        searchHistoryAccessor.setSearchHistory(searchHistory);
+        mSearchHistoryListView.setAdapter(new ArrayAdapter<>(
+                getActivity(),
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                searchHistory
+        ));
 
         return view;
     }
 
-    @Override
-    public Loader<ArrayList<String>> onCreateLoader(int id, Bundle args) {
-        return new SearchHistoryLoader(getContext(), searchHistoryAccessor.getSearchHistoryFilename());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<ArrayList<String>> loader, ArrayList<String> data) {
-        searchHistoryAccessor.setSearchHistory(data);
-        mSearchHistoryListView.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, data));
-    }
-
-    @Override
-    public void onLoaderReset(Loader<ArrayList<String>> loader) {
+    @NonNull
+    private ArrayList<String> populateSearchHistory() {
+        ArrayList<String> searchHistory;
+        searchHistory = new ArrayList<>();
+        searchHistory.add("#perfMatters");
+        searchHistory.add("#androidO");
+        return searchHistory;
     }
 
     @Override

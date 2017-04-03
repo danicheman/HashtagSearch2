@@ -5,8 +5,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.actest.nick.hashtagsearch2.cache.UseCacheWhenOfflineInterceptor;
-import com.actest.nick.hashtagsearch2.cache.AlwaysSaveToCacheInterceptor;
+import com.actest.nick.hashtagsearch2.OkHttpInterceptors.UseCacheWhenOfflineInterceptor;
+import com.actest.nick.hashtagsearch2.OkHttpInterceptors.AlwaysSaveToCacheInterceptor;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.*;
 

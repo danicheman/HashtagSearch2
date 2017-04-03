@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -16,16 +14,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.actest.nick.hashtagsearch2.data.SearchHistorySaver;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 import io.fabric.sdk.android.services.common.CommonUtils;
 
-public class SearchActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean>, SearchHistoryFragment.SearchHistoryAccessibleInterface, SearchView.OnFocusChangeListener,SearchView.OnCloseListener {
+public class SearchActivity extends AppCompatActivity implements SearchHistoryFragment.SearchHistoryAccessibleInterface, SearchView.OnFocusChangeListener,SearchView.OnCloseListener {
 
     private static final String TAG = "SearchActivity";
     private static final String SEARCH_HISTORY_FILENAME = "SearchHistory";
+
+    static final String SEARCH_HISTORY_PREFS = "SearchHistoryPrefs";
+    static final String SEARCH_HISTORY_KEY = "SearchHistory";
 
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
@@ -57,7 +58,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            Log.d(TAG, "handleIntent: collapseactionview");;
             mSearchMenuItem.collapseActionView();
             toolbar.setTitle(query);
 
@@ -71,8 +71,7 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
 
             if(!mSearchHistory.contains(query)) {
                 mSearchHistory.add(query);
-                //todo: fix loader - http://stackoverflow.com/questions/10524667/android-asynctaskloader-doesnt-start-loadinbackground
-                getSupportLoaderManager().initLoader(0, null, this).forceLoad();
+                updateSearchHistory();
             }
 
             if (currentFragment instanceof SearchResultsFragment) {
@@ -90,6 +89,14 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
             }
             Log.d(TAG, "onSearchRequested: " + query);
         }
+    }
+
+    private void updateSearchHistory() {
+        getSharedPreferences(SEARCH_HISTORY_PREFS, MODE_PRIVATE)
+                .edit()
+                .putString(SEARCH_HISTORY_KEY,
+                        new Gson().toJson(mSearchHistory)
+                ).apply();
     }
 
     @Override
@@ -131,23 +138,6 @@ public class SearchActivity extends AppCompatActivity implements LoaderManager.L
         }
 
         return true;
-    }
-
-    @Override
-    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
-        return new SearchHistorySaver(this, mSearchHistory, getSearchHistoryFilename());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
-        if (!data) {
-            Log.e(TAG, "onLoadFinished: SearchHistorySaver did not save history successfully");
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Boolean> loader) {
-
     }
 
     // Public functions for SearchHistoryFragment

@@ -1,4 +1,4 @@
-package com.actest.nick.hashtagsearch2.cache;
+package com.actest.nick.hashtagsearch2.OkHttpInterceptors;
 
 import com.actest.nick.hashtagsearch2.SearchApplication;
 
